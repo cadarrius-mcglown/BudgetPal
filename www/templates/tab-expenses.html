@@ -1,0 +1,124 @@
+<ion-view view-title="ExpensesDB">
+    <div ng-if="!vm.isCreating && !vm.isEditing">
+        <ion-content class="padding has-header">
+            <!-- LIST -->
+            <div class="bar bar-header bar-positive">
+                <span><button class="button button-positive" ng-click="vm.goToBackand()">Info</button></span>
+                <span ng-click="vm.isCreating = true"><i class='icon ion-plus-round new-item '> Add Expense</i></span>
+            </div>
+            <div class="bar bar-subheader">
+                <div class="list card" ng-repeat="object in vm.data"
+                     ng-class="{'active':vm.isCurrent(object.id)}">
+                    <div class="energized item item-icon-right item-icon-left">
+                        <i class="ion-compose icon" ng-click="vm.setEdited(object)"></i>
+
+                        <h2 class="text-center">{{object.type}}</h2>
+                        <i class="icon ion-close-round" ng-click="vm.delete(object.id)"></i>
+                    </div>
+                    <div class="item item-body">
+                        {{object.type}} <br>
+                        {{object.amount}} <br>
+                        {{object.date}} <br>
+                        {{object.memo}} <br>
+                        {{object.submitter}}
+                    </div>
+                </div>
+            </div>
+        </ion-content>
+    </div>
+
+
+    <div ng-if="vm.isCreating">
+        <ion-content class="padding has-header">
+            <!-- CREATING -->
+            <!-- Cancel Create-->
+            <div class="bar bar-header">
+                <h2 class="title">Create Expense</h2>
+
+                <span ng-click="vm.cancelCreate()" class="cancel-create">Cancel</span>
+            </div>
+
+            <div class="bar bar-subheader">
+                <form class="create-form" role="form"
+                      ng-submit="vm.create(vm.newObject)" novalidate>
+                    <div class="list">
+                        <!-- Type -->
+                        <label  class="item item-input item-stacked-label"  for="singleSelect"> Type select: </label>
+                        <select  class="item item-input item-stacked-label" name="singleSelect" ng-model="vm.newObject.type">
+                          <option value="Entertainment">Entertainment</option>
+                          <option value="Bills">Bills</option>
+                          <option value="Entertainment">Pets</option>
+                          <option value="Bills">Groceries</option>
+                          <option value="Entertainment">Gas</option>
+                          <option value="Bills">Savings</option>
+                          <option value="Entertainment">Charity</option>
+                          
+                        </select><br>
+
+
+                        <!-- Amount-->
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">Amount</span>
+                            <input type="number" class="form-control"
+                                   ng-model="vm.newObject.amount"
+                                   placeholder="22">
+                        </label>
+                        <!-- Date-->
+                        <!-- <label class="item item-input">
+                            <span class="input-label">Date</span>
+                            <input type="date" class="form-control"  >
+                          </label> -->
+                        <!-- Memo-->
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">Memo</span>
+                            <input type="text" class="form-control"
+                                   ng-model="vm.newObject.memo"
+                                   placeholder="Enter memo">
+                        </label>
+                        <!-- Submitter-->
+                        <!-- <label class="item item-input item-stacked-label">
+                            <span class="input-label">Submitter</span>
+                            <input type="text" class="form-control"
+                                   ng-model="vm.newObject.submitter"
+                                   placeholder="Enter submitter">
+                        </label> -->
+                    </div>
+                    <button class="button button-block button-positive" type="submit">Create</button>
+                </form>
+            </div>
+        </ion-content>
+    </div>
+
+
+    <div ng-if="vm.isEditing && !vm.isCreating">
+        <ion-content class="padding has-header">
+            <!-- EDITING -->
+            <div class="bar bar-header bar-secondary">
+                <h1 class="title">Editing {{vm.edited.name}}</h1>
+                <span ng-click="vm.cancelEditing()" class="cancel-create">Cancel</span>
+            </div>
+            <div class="bar bar-subheader">
+                <form class="edit-form" role="form"
+                      ng-submit="vm.update(vm.edited)" novalidate>
+                    <div class="list">
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">Name</span>
+                            <input type="text" class="form-control"
+                                   ng-model="vm.edited.name"
+                                   placeholder="Enter name">
+                        </label>
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">Description</span>
+                    <textarea class="form-control"
+                              ng-model="vm.edited.description"
+                              placeholder="Enter description"></textarea>
+
+                        </label>
+                    </div>
+                    <button class="button button-block button-positive" type="submit">Save</button>
+                </form>
+            </div>
+        </ion-content>
+    </div>
+</ion-view>
+

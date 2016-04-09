@@ -1,0 +1,41 @@
+<ion-view view-title="Diagnostics">
+   
+        <ion-content class="padding has-header">
+           <div class="card">
+                <div class="item item-divider">
+                Data in Doughnut
+                </div>
+                <div class="item item-text-wrap">
+                        <canvas id="doughnut" class="chart chart-doughnut" chart-data="data" chart-labels="labels" ></canvas> 
+                </div>
+           </div>
+
+ 
+           <div class="card">
+                <div class="item item-divider">
+                Data in Pie Chart
+                </div>
+                <div class="item item-text-wrap">
+                        <canvas id="pie" class="chart chart-pie" chart-data="data" chart-labels="labels" ></canvas> 
+                </div>
+           </div>
+
+
+             <div class="card">
+                <div class="item item-divider">
+               Data in Polar Area
+                </div>
+                <div class="item item-text-wrap">
+                        <canvas id="polar-area" class="chart chart-polar-area" chart-data="data" chart-labels="labels" options="{showTooltips:false}"></canvas> 
+                </div>
+           </div>
+
+        </ion-content>
+    
+
+
+
+  
+    
+</ion-view>
+

@@ -1,0 +1,87 @@
+<ion-view view-title="Add Expense">
+   <div ng-if="!vm.isCreating && !vm.isEditing">
+        <ion-content class="padding has-header">
+          <div class="card">
+                <div class="item item-divider ">
+                Data in Doughnut
+                </div>
+                <div class="item item-text-wrap ">
+                        <canvas id="doughnut" class="chart chart-doughnut" chart-data="data" chart-labels="labels" ></canvas> 
+                </div>
+           </div>
+
+           <button ng-click="vm.isCreating = true" class="button button-large button-royal">
+              Add Expense
+            </button>
+        </ion-content>
+    </div>
+
+    
+    <div ng-if="vm.isCreating">
+
+        <ion-content class="padding has-header">
+            <!-- CREATING -->
+            <!-- Cancel Create-->
+            <div class="bar bar-header">
+                <h2 class="title">Create Expense</h2>
+
+                <span ng-click="vm.cancelCreate()" class="cancel-create">Cancel</span>
+            </div>
+
+            <div class="bar bar-subheader">
+                <form class="create-form" role="form"
+                      ng-submit="vm.create(vm.newObject)" novalidate>
+                    <div class="list">
+                        <!-- Type -->
+                        <label  class="item item-input item-stacked-label"  for="singleSelect"> Type select: </label><br>
+                        <select  class="item item-input item-stacked-label" name="singleSelect" ng-model="vm.newObject.type">
+                          <option value="Entertainment">Entertainment</option>
+                          <option value="Bills">Bills</option>
+                          <option value="Pets">Pets</option>
+                          <option value="Groceries">Groceries</option>
+                          <option value="Gas">Gas</option>
+                          <option value="Savings">Savings</option>
+                          <option value="Charity">Charity</option>
+                          <option value="Debt">Debt</option>
+                           <option value="Cars">Cars</option>
+                          <option value="Health">Health</option>
+                        </select><br>
+
+
+                        <!-- Amount-->
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">Amount</span>
+                            <input type="number" class="form-control"
+                                   ng-model="vm.newObject.amount"
+                                   placeholder="22">
+                        </label>
+                        <!-- Date-->
+                        <!-- <label class="item item-input">
+                            <span class="input-label">Date</span>
+                            <input type="date" class="form-control"  >
+                          </label> -->
+                        <!-- Memo-->
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">Memo</span>
+                            <input type="text" class="form-control"
+                                   ng-model="vm.newObject.memo"
+                                   placeholder="Enter memo">
+                        </label>
+                        <!-- Submitter-->
+                        <!-- <label class="item item-input item-stacked-label">
+                            <span class="input-label">Submitter</span>
+                            <input type="text" class="form-control"
+                                   ng-model="vm.newObject.submitter"
+                                   placeholder="Enter submitter">
+                        </label> -->
+                    </div>
+                    <button ng-click="vm.refresh()" class="button button-block button-positive" type="submit">Create</button>
+                </form>
+            </div>
+        </ion-content>
+    </div>
+
+    
+    
+</ion-view>
+
