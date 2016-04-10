@@ -14,18 +14,23 @@ angular.module('SimpleRESTIonic.services', [])
     .service('ExpensesModel', function ($http, Backand) {
         var service = this,
             baseUrl = '/1/objects/',
-            objectName = 'expenses/';
-
+            objectName = 'expenses/',
+            params ='?pageSize=100';
         function getUrl() {
             return Backand.getApiUrl() + baseUrl + objectName;
         }
+
+        function getUrlnew() {
+            return Backand.getApiUrl() + baseUrl + objectName+params;
+        }
+
 
         function getUrlForId(id) {
             return getUrl() + id;
         }
 
         service.all = function () {
-            return $http.get(getUrl());
+            return $http.get(getUrlnew());
         };
 
         service.fetch = function (id) {

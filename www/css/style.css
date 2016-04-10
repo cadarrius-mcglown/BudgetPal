@@ -19,3 +19,7 @@
 .item-icon-left .icon, .item-icon-right .icon {
 	font-size: 22px;
 }
+.expense-submit-cm
+{
+	margin: auto;
+}
