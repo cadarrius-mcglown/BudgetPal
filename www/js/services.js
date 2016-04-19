@@ -14,8 +14,8 @@ angular.module('SimpleRESTIonic.services', [])
     .service('ExpensesModel', function ($http, Backand) {
         var service = this,
             baseUrl = '/1/objects/',
-            objectName = 'expenses/',
-            params ='?pageSize=100';
+            objectName = 'exp/',
+            params ='?pageSize=1000';
         function getUrl() {
             return Backand.getApiUrl() + baseUrl + objectName;
         }

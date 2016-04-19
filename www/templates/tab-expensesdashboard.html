@@ -3,19 +3,10 @@
         <ion-content class="padding has-header">
           <div class="card">
                 <div class="item item-divider ">
-                Category Data
+                Data in Doughnut
                 </div>
                 <div class="item item-text-wrap ">
-                        <canvas id="pie" class="chart chart-pie" chart-data="categoryDiagData" chart-labels="categoryDiagLabels" ></canvas> 
-                </div>
-           </div>
-
-             <div class="card">
-                <div class="item item-divider ">
-                SubCtegory Data 
-                </div>
-                <div class="item item-text-wrap ">
-                        <canvas id="pie2" class="chart chart-pie" chart-data="subCategoryDiagData" chart-labels="subCategoryDiagLabels" ></canvas> 
+                        <canvas id="doughnut" class="chart chart-doughnut" chart-data="data" chart-labels="labels" ></canvas> 
                 </div>
            </div>
 
@@ -43,8 +34,17 @@
                     <div class="list">
                         <!-- Type -->
                         <label  class="item item-input item-stacked-label"  for="singleSelect"> Type select: </label><br>
-                        <select  class="item item-input item-stacked-label" name="singleSelect" ng-model="vm.newObject.subcategory">
-                          <option ng-repeat="subcategory in subCategoryArray" value="{{subcategory}}">{{subcategory}}</option>
+                        <select  class="item item-input item-stacked-label" name="singleSelect" ng-model="vm.newObject.type">
+                          <option value="Entertainment">Entertainment</option>
+                          <option value="Bills">Bills</option>
+                          <option value="Pets">Pets</option>
+                          <option value="Groceries">Groceries</option>
+                          <option value="Gas">Gas</option>
+                          <option value="Savings">Savings</option>
+                          <option value="Charity">Charity</option>
+                          <option value="Debt">Debt</option>
+                           <option value="Cars">Cars</option>
+                          <option value="Health">Health</option>
                         </select><br>
 
 

@@ -1,34 +1,39 @@
-<ion-view view-title="Diagnostics">
+<ion-view cache-view="false" view-title="Diagnostics">
    
         <ion-content class="padding has-header">
-           <div class="card">
-                <div class="item item-divider">
-                Data in Doughnut
-                </div>
-                <div class="item item-text-wrap">
-                        <canvas id="doughnut" class="chart chart-doughnut" chart-data="data" chart-labels="labels" ></canvas> 
-                </div>
-           </div>
+             <!-- CREATING -->
+            <!-- Cancel Create-->
+            <div class="bar bar-header">
+                <h2 class="title">Create Expense</h2>
 
- 
-           <div class="card">
-                <div class="item item-divider">
-                Data in Pie Chart
-                </div>
-                <div class="item item-text-wrap">
-                        <canvas id="pie" class="chart chart-pie" chart-data="data" chart-labels="labels" ></canvas> 
-                </div>
-           </div>
+                <span ng-click="vm.cancelCreate()" class="cancel-create">Cancel</span>
+            </div>
+
+            <div class="bar bar-subheader">
+                <form class="create-form" role="form"
+                      ng-submit="vm.create(vm.newObject)" novalidate>
+                    <div class="list">
+                        
+
+                        <label class="item item-input item-stacked-label">
+                            <span class="input-label">category</span>
+                            <input type="text" class="form-control"
+                                   ng-model="vm.newObject.category"
+                                   placeholder="Enter category carefully">
+                        </label>
+
+                         <label class="item item-input item-stacked-label">
+                            <span class="input-label">subcategory</span>
+                            <input type="text" class="form-control"
+                                   ng-model="vm.newObject.subcategory"
+                                   placeholder="Enter subcategory carfully">
+                        </label>
 
 
-             <div class="card">
-                <div class="item item-divider">
-               Data in Polar Area
-                </div>
-                <div class="item item-text-wrap">
-                        <canvas id="polar-area" class="chart chart-polar-area" chart-data="data" chart-labels="labels" options="{showTooltips:false}"></canvas> 
-                </div>
-           </div>
+                    </div>
+                    <button ng-click="vm.refresh()" class="button button-block button-positive" type="submit">Create</button>
+
+                </form>
 
         </ion-content>
     

@@ -36,6 +36,7 @@ angular.module('SimpleRESTIonic.controllers', [])
         login.signout = signout;
         login.anonymousLogin = anonymousLogin;
     })
+    
     .controller('ExCtrl', function ($scope) {
          $scope.labels = ["Entertainment", "Bills", "Giving Back","Travel","Investment"];
         $scope.data = [300, 500, 100 ,240, 360];
@@ -146,6 +147,11 @@ angular.module('SimpleRESTIonic.controllers', [])
         $scope.labels = ["Entertainment", "Bills", "Pets","Groceries","Gas","Savings","Charity","Debt","Cars","Health"];
         $scope.data = [0,0,0,0,0,0,0,0,0,0];
 
+        $scope.pieData = [];
+
+        $scope.categoryArray = [];
+        $scope.subCategoryArray = [];
+
         var vm = this;
         var chartPoints =[];
         var chartNames =[];
@@ -160,6 +166,10 @@ angular.module('SimpleRESTIonic.controllers', [])
         var Cars = 0;
         var Health = 0;
         
+var tempCategoryArr = [];
+var tempSubCategoryArr = [];
+var testRelation = [];
+
         function goToBackand() {
             window.location = 'http://docs.backand.com';
         }
@@ -168,10 +178,20 @@ angular.module('SimpleRESTIonic.controllers', [])
             ExpensesModel.all()
                 .then(function (result) {
                     vm.data = result.data.data;
-
+                   // console.log(vm.data);
                         angular.forEach(vm.data, function(value, key) {
 
-                            switch(value.type) {
+                        //generate subcategories for dropdowns
+                            tempCategoryArr.push(value.category);
+                            tempSubCategoryArr.push(value.subcategory);
+
+                            //generate simple array of objects to be used for diffrent parts of app ie-charts and category genration
+                            testRelation.push({category:value.category, subcategory:value.subcategory, amount: value.amount});
+
+                            
+
+
+                            switch(value.category) {
                                 case "Entertainment":
                                     $scope.data[0]+=value.amount;
                                     break;
@@ -208,19 +228,121 @@ angular.module('SimpleRESTIonic.controllers', [])
                             //chartNames.push(value.type);
                         });
 
+
+                        $scope.categoryArray = eliminateDuplicates(tempCategoryArr);
+                        $scope.subCategoryArray = eliminateDuplicates(tempSubCategoryArr);
+
+
+                            $scope.categoryDiag = [];
+                             $scope.subCategoryDiag = [];
+
+
+                             $scope.categoryDiagLabels = [];
+                             $scope.subCategoryDiagLabels = [];
+
+                             $scope.categoryDiagData = [];
+                             $scope.subCategoryDiagData = [];
+
+                    //use category array and subcat array to create diagnostic 
+                    //arrays since they already have duplicates removed
+                        for (i = 0; i < $scope.categoryArray.length; i++) 
+                        {
+                            $scope.categoryDiag.push({category:$scope.categoryArray[i], amount:0});
+                            
+                        }
+                        for (i = 0; i < $scope.subCategoryArray.length; i++) 
+                        {
+                            $scope.subCategoryDiag.push({category:$scope.subCategoryArray[i], amount:0});
+                        }
                         
-               // $scope.labels = chartNames;
-                //$scope.data = chartPoints;
+                        for(i = 0; i < vm.data.length; i++)
+                        {
+
+                             angular.forEach($scope.categoryDiag, function(value, key) {  
+                                if(value.category == vm.data[i].category){
+                                    value.amount += vm.data[i].amount;
+                                    //console.log(value.amount);
+                                }
+                              });
+
+                                 angular.forEach($scope.subCategoryDiag, function(value, key) {  
+                                if(value.category == vm.data[i].subcategory){
+                                    value.amount += vm.data[i].amount;
+                                    //console.log(value.amount);
+                                }
+                              });
+ 
+                        }
+
+                        for(i = 0; i < $scope.categoryDiag.length; i++){
+
+                            $scope.categoryDiagLabels.push($scope.categoryDiag[i].category);
+                            $scope.categoryDiagData.push($scope.categoryDiag[i].amount);
+                        }
+
+                        for(i = 0; i < $scope.subCategoryDiag.length; i++){
+
+                            $scope.subCategoryDiagLabels.push($scope.subCategoryDiag[i].category);
+                            $scope.subCategoryDiagData.push($scope.subCategoryDiag[i].amount);
+                        }
+
+                       // console.log($scope.subCategoryDiag);
+
+                           // console.log($scope.categoryArray);
+                           // console.log($scope.subCategoryArray);
+                            //console.log(testRelation);
+                        
+
 
 
                 });
         }
+
+
+
+            function eliminateDuplicates(arr) {
+            var i,
+              len=arr.length,
+              out=[],
+              obj={};
+
+             for (i=0;i<len;i++) {
+             obj[arr[i]]=0;
+             }
+             for (i in obj) {
+             out.push(i);
+             }
+             return out;
+            }
+
+        function unique(list) {
+            var result = [];
+             angular.forEach(list, function(i, e) {
+                if ($.inArray(e, result) == -1) result.push(e);
+            });
+            return result;
+        }
+
 
         function clearData(){
             vm.data = null;
         }
 
         function create(object) {
+       
+        //before creating object in database use subcategory selected to select 
+        //the category for the input object
+            for (i = 0; i < testRelation.length; i++) { 
+                 if(testRelation[i].subcategory == vm.newObject.subcategory)
+                {
+                   object.category = testRelation[i].category;
+                   // = value.category;
+                }
+            }
+
+
+            console.log(object['category']);
+            console.log(object);
             ExpensesModel.create(object)
                 .then(function (result) {
                     cancelCreate();
@@ -230,6 +352,7 @@ angular.module('SimpleRESTIonic.controllers', [])
         }
 
         function update(object) {
+            
             ExpensesModel.update(object.id, object)
                 .then(function (result) {
                     cancelEditing();
@@ -246,7 +369,8 @@ angular.module('SimpleRESTIonic.controllers', [])
         }
 
         function initCreateForm() {
-            vm.newObject = {type: '', amount: '', date: new Date(), memo: '', submitter: 'Cadarrius & Breya'};
+
+            vm.newObject = {category: '',subcategory: '', amount: '', date: new Date(), memo: '', submitter: 'Cadarrius & Breya'};
         }
 
         function setEdited(object) {
