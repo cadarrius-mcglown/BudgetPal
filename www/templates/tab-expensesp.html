@@ -1,23 +1,39 @@
 <ion-view cache-view="false" view-title="Add Expense">
    <div ng-if="!vm.isCreating && !vm.isEditing">
         <ion-content class="padding has-header">
+        
+
+           <label class="item item-input">
+            <span class="input-label">Month</span>
+            <input value="" placeholder="yyyy-MM-dd" type="month" ng-model="vm.month" ng-change="vm.dateChange()">
+          </label>
+
+          <!-- <label class="item item-input">
+            <span class="input-label">Number</span>
+            <input type="number"  ng-change="vm.dateChange()" ng-model="vm.currentMonth">
+          </label>  -->
+<ion-checkbox ng-change="vm.showSubCat()" ng-model="isChecked">Show Sub-Categories</ion-checkbox>
+
+
           <div class="card">
                 <div class="item item-divider ">
                 Category Data
                 </div>
                 <div class="item item-text-wrap ">
-                        <canvas id="pie" class="chart chart-pie" chart-data="categoryDiagData" chart-labels="categoryDiagLabels" ></canvas> 
+                        <canvas id="pie" class="chart chart-pie" chart-data="categoryDiagData" chart-labels="categoryDiagLabels" chart-legend="true"></canvas> 
                 </div>
            </div>
 
-             <div class="card">
+            <div ng-hide="IsVisible" class="card">
                 <div class="item item-divider ">
                 SubCtegory Data 
                 </div>
                 <div class="item item-text-wrap ">
-                        <canvas id="pie2" class="chart chart-pie" chart-data="subCategoryDiagData" chart-labels="subCategoryDiagLabels" ></canvas> 
+                        <canvas id="pietwo" class="chart chart-pie" chart-data="subCategoryDiagData" chart-labels="subCategoryDiagLabels" ></canvas> 
                 </div>
            </div>
+
+
 
            <button ng-click="vm.isCreating = true" class="button button-full button-royal">
               Add Expense

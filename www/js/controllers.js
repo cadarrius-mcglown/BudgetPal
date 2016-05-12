@@ -144,15 +144,31 @@ angular.module('SimpleRESTIonic.controllers', [])
     })
 
     .controller('ExpensespCtrl', function (ExpensesModel, $rootScope,$scope) {
-        $scope.labels = ["Entertainment", "Bills", "Pets","Groceries","Gas","Savings","Charity","Debt","Cars","Health"];
-        $scope.data = [0,0,0,0,0,0,0,0,0,0];
+var vm = this;
+
+
+    $scope.IsVisible = true;
+
+        //$scope.dates ={};
+
+        //gets current date
+        vm.month = new Date();
+        //gets current month from current date
+        vm.currentMonth = vm.month.getMonth();
+        //month stamped on the data
+        var dataMonth;
 
         $scope.pieData = [];
 
         $scope.categoryArray = [];
         $scope.subCategoryArray = [];
 
-        var vm = this;
+        //console.log($scope.month);
+
+        //NEEDED MONTH DEFAULT IS CURRENT MONTH
+        
+
+        
         var chartPoints =[];
         var chartNames =[];
         var Entertainment = 0;
@@ -166,9 +182,9 @@ angular.module('SimpleRESTIonic.controllers', [])
         var Cars = 0;
         var Health = 0;
         
-var tempCategoryArr = [];
-var tempSubCategoryArr = [];
-var testRelation = [];
+        var tempCategoryArr = [];
+        var tempSubCategoryArr = [];
+        var testRelation = [];
 
         function goToBackand() {
             window.location = 'http://docs.backand.com';
@@ -187,65 +203,20 @@ var testRelation = [];
 
                             //generate simple array of objects to be used for diffrent parts of app ie-charts and category genration
                             testRelation.push({category:value.category, subcategory:value.subcategory, amount: value.amount});
-
-                            
-
-
-                            switch(value.category) {
-                                case "Entertainment":
-                                    $scope.data[0]+=value.amount;
-                                    break;
-                                case "Bills":
-                                    $scope.data[1]+=value.amount;
-                                    break;
-                                case "Pets":
-                                    $scope.data[2]+=value.amount;
-                                    break;
-                                case "Groceries":
-                                    $scope.data[3]+=value.amount;
-                                    break;
-                                case "Gas":
-                                    $scope.data[4]+=value.amount;
-                                    break;
-                                case "Savings":
-                                    $scope.data[5]+=value.amount;
-                                    break;
-                                case "Charity":
-                                    $scope.data[6]+=value.amount;
-                                    break; 
-                                case "Debt":
-                                    $scope.data[7]+=value.amount;
-                                    break; 
-                                case "Cars":
-                                    $scope.data[8]+=value.amount;
-                                    break; 
-                                case "Health":
-                                    $scope.data[9]+=value.amount;
-                                    break; 
-                            }
-
-                           // chartPoints.push(value.amount);
-                            //chartNames.push(value.type);
                         });
 
+                            $scope.categoryArray = eliminateDuplicates(tempCategoryArr);
+                            $scope.subCategoryArray = eliminateDuplicates(tempSubCategoryArr);
 
-                        $scope.categoryArray = eliminateDuplicates(tempCategoryArr);
-                        $scope.subCategoryArray = eliminateDuplicates(tempSubCategoryArr);
-
-
-                            $scope.categoryDiag = [];
-                             $scope.subCategoryDiag = [];
-
-
-                             $scope.categoryDiagLabels = [];
-                             $scope.subCategoryDiagLabels = [];
-
-                             $scope.categoryDiagData = [];
-                             $scope.subCategoryDiagData = [];
-
+                            clearData();
                     //use category array and subcat array to create diagnostic 
                     //arrays since they already have duplicates removed
-                        for (i = 0; i < $scope.categoryArray.length; i++) 
+                            createCategoryArrays();
+                });
+        }
+
+function createCategoryArrays(){
+                     for (i = 0; i < $scope.categoryArray.length; i++) 
                         {
                             $scope.categoryDiag.push({category:$scope.categoryArray[i], amount:0});
                             
@@ -255,18 +226,37 @@ var testRelation = [];
                             $scope.subCategoryDiag.push({category:$scope.subCategoryArray[i], amount:0});
                         }
                         
-                        for(i = 0; i < vm.data.length; i++)
-                        {
+                      
+                    sumCategAndSubCateg();
+
+}
+
+//function goes through all returned records and sums the appropriate categories and subcategories
+//for the chosen month
+        function sumCategAndSubCateg(){
+                            vm.currentMonth = vm.month.getMonth();
+                            //console.log( vm.currentMonth);
+                            //console.log( vm.month);
+
+                            for(i = 0; i < vm.data.length; i++)
+                            {
+                            console.log("high");
+
+                            dataMonth = new Date(vm.data[i].date).getMonth();
+
+                             //console.log($scope.currentMonth);
+                             //console.log(dataMonth);
 
                              angular.forEach($scope.categoryDiag, function(value, key) {  
-                                if(value.category == vm.data[i].category){
+                                if(value.category == vm.data[i].category & vm.currentMonth == dataMonth){
                                     value.amount += vm.data[i].amount;
                                     //console.log(value.amount);
+                                    //console.log(new Date(vm.data[i].date).getMonth());
                                 }
                               });
 
                                  angular.forEach($scope.subCategoryDiag, function(value, key) {  
-                                if(value.category == vm.data[i].subcategory){
+                                if(value.category == vm.data[i].subcategory & vm.currentMonth == dataMonth){
                                     value.amount += vm.data[i].amount;
                                     //console.log(value.amount);
                                 }
@@ -274,6 +264,13 @@ var testRelation = [];
  
                         }
 
+                        updateChartData();
+
+
+        }
+
+        function updateChartData()
+        {
                         for(i = 0; i < $scope.categoryDiag.length; i++){
 
                             $scope.categoryDiagLabels.push($scope.categoryDiag[i].category);
@@ -282,37 +279,25 @@ var testRelation = [];
 
                         for(i = 0; i < $scope.subCategoryDiag.length; i++){
 
-                            $scope.subCategoryDiagLabels.push($scope.subCategoryDiag[i].category);
+                           $scope.subCategoryDiagLabels.push($scope.subCategoryDiag[i].category);
                             $scope.subCategoryDiagData.push($scope.subCategoryDiag[i].amount);
                         }
-
-                       // console.log($scope.subCategoryDiag);
-
-                           // console.log($scope.categoryArray);
-                           // console.log($scope.subCategoryArray);
-                            //console.log(testRelation);
-                        
-
-
-
-                });
         }
 
 
-
             function eliminateDuplicates(arr) {
-            var i,
-              len=arr.length,
-              out=[],
-              obj={};
+                var i,
+                  len=arr.length,
+                  out=[],
+                  obj={};
 
-             for (i=0;i<len;i++) {
-             obj[arr[i]]=0;
-             }
-             for (i in obj) {
-             out.push(i);
-             }
-             return out;
+                 for (i=0;i<len;i++) {
+                 obj[arr[i]]=0;
+                 }
+                 for (i in obj) {
+                 out.push(i);
+                 }
+                 return out;
             }
 
         function unique(list) {
@@ -323,10 +308,6 @@ var testRelation = [];
             return result;
         }
 
-
-        function clearData(){
-            vm.data = null;
-        }
 
         function create(object) {
        
@@ -391,13 +372,37 @@ var testRelation = [];
             initCreateForm();
             vm.isCreating = false;
         }
+        function clearData(){
+            $scope.categoryDiag = [];
+            $scope.subCategoryDiag = [];
 
-        function refresh(){
-          $scope.data = [0,0,0,0,0,0,0,0,0,0];
+
+            $scope.categoryDiagLabels = [];
+            $scope.subCategoryDiagLabels = [];
+
+            $scope.categoryDiagData = [];
+            $scope.subCategoryDiagData = [];
         }
 
         
- 
+        function showSubCategory(){
+            if($scope.IsVisible == true)
+                    $scope.IsVisible = false;
+                else
+                    $scope.IsVisible = true;
+        }
+
+        function dateChg(){
+          clearData();
+
+            createCategoryArrays();
+
+        }
+
+
+
+        vm.showSubCat = showSubCategory;
+        vm.dateChange = dateChg;
         vm.objects = [];
         vm.edited = null;
         vm.isEditing = false;
@@ -412,7 +417,7 @@ var testRelation = [];
         vm.cancelCreate = cancelCreate;
         vm.goToBackand = goToBackand;
         vm.isAuthorized = false;
-        vm.refresh =refresh;
+        
         $rootScope.$on('authorized', function () {
             vm.isAuthorized = true;
             getAll();
